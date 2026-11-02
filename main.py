@@ -1,7 +1,7 @@
 """FastAPI backend for the website AI assistant.
 Run:  uvicorn main:app --reload --port 8000
 """
-import os, re
+import os, re, logging
 from typing import List
 from fastapi import FastAPI, UploadFile, File, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,8 +11,11 @@ import rag
 
 MIN_SCORE = float(os.getenv("MIN_SCORE", "0.45"))
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
-llm = OpenAI(api_key=os.getenv("LLM_API_KEY"), base_url=os.getenv("LLM_BASE_URL"))
-MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
+log = logging.getLogger("assistant")
+# Defaults point to Groq, so a missing LLM_BASE_URL / LLM_MODEL variable no longer sends your key to OpenAI.
+llm = OpenAI(api_key=os.getenv("LLM_API_KEY"),
+             base_url=os.getenv("LLM_BASE_URL") or "https://api.groq.com/openai/v1")
+MODEL = os.getenv("LLM_MODEL") or "openai/gpt-oss-20b"
 
 OFF_TOPIC = ("Sorry, I can only answer questions about MuthuRaj's skills, projects, experience, "
              "services and contact details. Please ask me something about those!")
@@ -72,7 +75,13 @@ def chat(body: ChatIn):
                  for t in body.history[-4:] if t.role in ("user", "assistant")]
     messages.append({"role": "user", "content": msg})
 
-    out = llm.chat.completions.create(model=MODEL, messages=messages, temperature=0.2, max_tokens=400)
+    extra = {"reasoning_effort": "low"} if MODEL.startswith("openai/gpt-oss") else {}
+    try:
+        out = llm.chat.completions.create(model=MODEL, messages=messages, temperature=0.2,
+                                          max_tokens=1000, extra_body=extra)
+    except Exception:
+        log.exception("LLM call failed (check LLM_API_KEY, LLM_BASE_URL, LLM_MODEL)")
+        raise HTTPException(502, "The language model is unavailable")
     answer = (out.choices[0].message.content or "").strip()
     if "NOT_RELEVANT" in answer or not answer:           # gate 2: the LLM itself says context is insufficient
         return {"answer": OFF_TOPIC, "sources": [], "relevant": False}
