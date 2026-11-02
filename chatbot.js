@@ -11,7 +11,7 @@
     '<button id="ai-launcher" aria-label="Open AI assistant">' +
       '<img src="' + LOGO + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
       '<i class="fa-solid fa-robot ai-fallback"></i><span class="ai-dot"></span></button>' +
-    '<section id="ai-panel" aria-label="AI assistant chat">' +
+    '<div id="ai-panel" role="dialog" aria-label="AI assistant chat">' +
       '<div class="ai-head"><img src="' + LOGO + '" alt="" onerror="this.style.display=\'none\'">' +
         '<div><div class="ai-title">' + NAME + '</div><div class="ai-status">Online</div></div>' +
         '<button class="ai-close" aria-label="Close">&times;</button></div>' +
@@ -19,7 +19,7 @@
       '<div class="ai-chips" id="ai-chips"></div>' +
       '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
       '<div class="ai-foot">Answers come from MuthuRaj\u2019s  documents only</div>' +
-    '</section>');
+    '</div>');
 
   var $ = function (id) { return document.getElementById(id); };
   var panel = $('ai-panel'), msgs = $('ai-msgs'), input = $('ai-input'), send = $('ai-send');
