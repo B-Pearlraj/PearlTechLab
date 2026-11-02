@@ -219,7 +219,11 @@ footer a{color:var(--night-ink)}
   .hero,.about,.contact{grid-template-columns:1fr;gap:44px}
   .hero{padding:56px 0 64px}
   .about{gap:40px}
-  .photo{max-width:320px}
+  .about>div{min-width:0}
+  .photo{width:100%;max-width:420px;margin:0 auto;aspect-ratio:auto;display:block;min-height:0}
+  .photo img{position:static;display:block;width:100%;height:auto;object-fit:contain}
+  .photo span{display:none}
+  .facts{max-width:420px;margin-left:auto;margin-right:auto}
   .service-list{grid-template-columns:1fr}
   section{padding:72px 0}
 }
