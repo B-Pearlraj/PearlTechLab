@@ -3,20 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#FFFFFF">
-<script>
-/* apply saved / system theme before first paint (no flash) */
-(function(){
-  var t=null;
-  try{t=localStorage.getItem('theme');}catch(e){}
-  if(t!=='dark'&&t!=='light'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}
-  document.documentElement.setAttribute('data-theme',t);
-  var m=document.querySelector('meta[name="theme-color"]');
-  if(m)m.setAttribute('content',t==='dark'?'#0F1530':'#FFFFFF');
-})();
-</script>
 <title>Pearl-TechLab | Data Scientist &amp; Full-Stack Developer</title>
 <meta name="description" content="Portfolio of MuthuRaj B, a Data Scientist, Machine Learning Engineer and Full-Stack Developer from Tamil Nadu, India.">
+<meta name="color-scheme" content="light dark">
+<script>
+(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','light');}})();
+</script>
 <link rel="icon" type="image/png" href="images/Logo-PTS.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,18 +23,20 @@
   --display:'Bricolage Grotesque',system-ui,sans-serif;
   --body:'Figtree',system-ui,sans-serif;
   --wrap:1160px;
-  --on-ink:#FFFFFF; --on-brand:#FFFFFF; --nav-bg:rgba(255,255,255,.9); --thumb-end:#F5F7FF;
+  --on-ink:#fff; --nav-bg:rgba(255,255,255,.9); --thumb-2:#F5F7FF; --overlay:rgba(14,20,48,.62);
+  --foot-bg:#090D24; --foot-ink:#8E99C4; --night-ink:#C9D0EA; --night-lede:#AEB8DC; --night-line:#3A4678;
   color-scheme:light;
 }
-/* dark theme */
-:root[data-theme="dark"]{
-  --paper:#161E42; --surface:#0F1530; --ink:#E9EDFB; --ink-2:#A3AED3; --line:#28325F;
-  --brand:#7B8CFF; --brand-deep:#A3AFFF; --brand-tint:#1E2A66; --mark:#F5B301;
-  --night:#080C20; --night-2:#1A2250; --ok:#3DD6A0; --err:#FF8A80;
-  --on-ink:#0F1530; --on-brand:#0F1530; --nav-bg:rgba(15,21,48,.9); --thumb-end:#172053;
+/* dark theme: neutral medium black (no blue tint) */
+html[data-theme="dark"]{
+  --paper:#262626; --surface:#1E1E1E; --ink:#EDEDED; --ink-2:#A9A9A9; --line:#3A3A3A;
+  --brand:#7B8AFF; --brand-deep:#98A4FF; --brand-tint:#2D2D32; --mark:#F5B301;
+  --night:#141414; --night-2:#2A2A2A; --ok:#3DD9A0; --err:#FF8A80;
+  --on-ink:#161616; --nav-bg:rgba(30,30,30,.9); --thumb-2:#232323; --overlay:rgba(0,0,0,.72);
+  --foot-bg:#0E0E0E; --foot-ink:#9A9A9A; --night-ink:#D0D0D0; --night-lede:#B0B0B0; --night-line:#4A4A4A;
   color-scheme:dark;
 }
-:root[data-theme="dark"] .form-card{border:1px solid var(--line)}
+body,.nav,.results,.work,.form-card,.modal,.field input,.field select,.field textarea,.chips li,.stack li,.status{transition:background-color .25s,color .25s,border-color .25s}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:84px}
 body{font-family:var(--body);font-size:1.0625rem;line-height:1.65;color:var(--ink);background:var(--surface);-webkit-font-smoothing:antialiased}
@@ -65,16 +59,16 @@ h3{font-size:1.25rem;letter-spacing:-.01em;line-height:1.25}
 
 /* buttons */
 .btn{display:inline-flex;align-items:center;gap:10px;padding:13px 24px;border-radius:10px;border:1.5px solid transparent;font-weight:600;font-size:1rem;cursor:pointer;text-decoration:none;transition:background .2s,border-color .2s,color .2s}
-.btn-primary{background:var(--brand);color:var(--on-brand)}
-.btn-primary:hover{background:var(--brand-deep);color:var(--on-brand)}
+.btn-primary{background:var(--brand);color:#fff}
+html[data-theme="dark"] .btn-primary,html[data-theme="dark"] .btn-primary:hover{color:#111}
+.btn-primary:hover{background:var(--brand-deep);color:#fff}
 .btn-ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
 .btn-ghost:hover{background:var(--ink);color:var(--on-ink)}
 .btn[disabled]{opacity:.6;cursor:progress}
 
 /* nav */
 .nav{position:sticky;top:0;z-index:1000;background:var(--nav-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.nav .wrap{display:flex;align-items:center;height:68px}
-.nav nav{margin-left:auto}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-.01em}
 .brand img{height:38px;width:auto}
 .brand:hover{color:var(--ink)}
@@ -83,12 +77,13 @@ h3{font-size:1.25rem;letter-spacing:-.01em;line-height:1.25}
 .nav ul a:hover{color:var(--ink);background:var(--paper)}
 .nav ul a[aria-current="true"]{color:var(--ink);background:var(--brand-tint)}
 .nav ul a.nav-cta{background:var(--ink);color:var(--on-ink);margin-left:8px}
-.nav ul a.nav-cta:hover{background:var(--brand);color:var(--on-brand)}
-.menu-btn,.theme-btn{background:none;border:1.5px solid var(--line);border-radius:10px;width:44px;height:44px;cursor:pointer;font-size:1.1rem;display:grid;place-items:center;flex:none;transition:background .2s,border-color .2s}
-.menu-btn:hover,.theme-btn:hover{background:var(--paper);border-color:var(--ink-2)}
-.menu-btn{display:none}
-.theme-btn{margin-left:10px}
-.theme-btn svg{width:20px;height:20px;display:block}
+.nav ul a.nav-cta:hover{background:var(--brand);color:#fff}
+html[data-theme="dark"] .nav ul a.nav-cta:hover{color:#111}
+.menu-btn{display:none;background:none;border:1.5px solid var(--line);border-radius:10px;width:44px;height:44px;cursor:pointer;font-size:1.1rem}
+
+.brand{margin-right:auto}
+.theme-btn{display:inline-grid;place-items:center;background:none;border:1.5px solid var(--line);border-radius:10px;width:44px;height:44px;cursor:pointer;font-size:1.05rem;margin-left:10px;flex:none;color:var(--ink)}
+.theme-btn:hover{background:var(--paper);border-color:var(--ink-2)}
 
 /* hero */
 #header{background:var(--paper);border-bottom:1px solid var(--line)}
@@ -170,7 +165,7 @@ section{padding:96px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:26px}
 .work{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;background:var(--surface)}
 .work:hover{border-color:var(--brand)}
-.thumb{position:relative;aspect-ratio:16/10;background:linear-gradient(140deg,var(--brand-tint),var(--thumb-end));display:grid;place-items:center;font-size:2.4rem;color:var(--brand);border-bottom:1px solid var(--line)}
+.thumb{position:relative;aspect-ratio:16/10;background:linear-gradient(140deg,var(--brand-tint),var(--thumb-2));display:grid;place-items:center;font-size:2.4rem;color:var(--brand);border-bottom:1px solid var(--line)}
 .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .work-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:8px;flex:1}
 .work-tag{font-size:.88rem;font-weight:600;color:var(--brand)}
@@ -180,9 +175,9 @@ section{padding:96px 0}
 .more{margin-top:48px;text-align:center}
 
 /* contact */
-#contact{background:var(--night);color:#C9D0EA}
+#contact{background:var(--night);color:var(--night-ink)}
 #contact h2,#contact h3{color:#fff}
-#contact .lede{color:#AEB8DC}
+#contact .lede{color:var(--night-lede)}
 .contact{display:grid;grid-template-columns:1fr 1.05fr;gap:72px;align-items:start}
 .contact-list{list-style:none;display:grid;gap:18px;margin:34px 0}
 .contact-list li{display:flex;gap:16px;align-items:center}
@@ -190,8 +185,8 @@ section{padding:96px 0}
 .contact-list a{color:#fff;text-decoration:none;font-weight:500}
 .contact-list a:hover{text-decoration:underline;color:#fff}
 .social{display:flex;gap:12px}
-.social a{width:46px;height:46px;border-radius:50%;border:1.5px solid #3A4678;display:grid;place-items:center;color:#fff;text-decoration:none;font-size:1.15rem}
-.social a:hover{background:#fff;color:var(--night);border-color:#fff}
+.social a{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--night-line);display:grid;place-items:center;color:#fff;text-decoration:none;font-size:1.15rem}
+.social a:hover{background:#fff;color:#141414;border-color:#fff}
 .form-card{background:var(--surface);color:var(--ink);border-radius:var(--r-l);padding:36px}
 .form-card h3{color:var(--ink);margin-bottom:22px;font-size:1.4rem}
 
@@ -206,7 +201,7 @@ section{padding:96px 0}
 .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
 
 /* modal */
-.overlay{position:fixed;inset:0;background:rgba(14,20,48,.62);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
+.overlay{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;padding:20px;z-index:2000}
 .overlay.active{display:flex}
 .modal{position:relative;background:var(--surface);border-radius:var(--r-l);width:100%;max-width:520px;max-height:92vh;overflow:auto;padding:38px 34px 34px}
 .modal h2{font-size:1.6rem;margin-bottom:8px;padding-right:40px}
@@ -216,9 +211,9 @@ section{padding:96px 0}
 .success{display:none;text-align:center;padding:24px 0}
 .success i{font-size:2.6rem;color:var(--ok);margin-bottom:12px}
 
-footer{background:#090D24;color:#8E99C4;padding:28px 0;font-size:.95rem}
+footer{background:var(--foot-bg);color:var(--foot-ink);padding:28px 0;font-size:.95rem}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-footer a{color:#C9D0EA}
+footer a{color:var(--night-ink)}
 
 @media (max-width:980px){
   .hero,.about,.contact{grid-template-columns:1fr;gap:44px}
@@ -229,9 +224,10 @@ footer a{color:#C9D0EA}
   section{padding:72px 0}
 }
 @media (max-width:760px){
-  .menu-btn{display:grid;margin-right:12px}
-  .nav nav{margin-left:0}
-  .theme-btn{margin-left:auto}
+  .menu-btn{display:grid;place-items:center;order:-1;margin-right:12px;flex:none}
+  .brand{order:0;min-width:0}
+  .theme-btn{order:2;margin-left:8px}
+  .nav nav{order:3}
   .nav ul{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;align-items:stretch;background:var(--surface);border-bottom:1px solid var(--line);padding:12px 20px 20px;gap:2px}
   .nav ul.open{display:flex}
   .nav ul a.nav-cta{margin:8px 0 0;text-align:center}
@@ -239,10 +235,6 @@ footer a{color:#C9D0EA}
   .rows li{grid-template-columns:1fr;gap:2px}
   .wrap{padding:0 20px}
   .form-card,.modal{padding:28px 22px}
-}
-@media (max-width:360px){
-  .brand{font-size:1rem;gap:8px}
-  .brand img{height:32px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -256,11 +248,11 @@ footer a{color:#C9D0EA}
 
 <header class="nav">
   <div class="wrap">
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navmenu"><i class="fa-solid fa-bars"></i></button>
     <a class="brand" href="#header" aria-label="MR, home">
       <img src="images/Logo-PTS.png" alt="" onerror="this.style.display='none'">
       <span>Pearl-TechLab</span>
     </a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navmenu"><i class="fa-solid fa-bars"></i></button>
     <nav aria-label="Main">
       <ul id="navmenu">
         <li><a href="#about">About</a></li>
@@ -270,9 +262,7 @@ footer a{color:#C9D0EA}
         <li><a href="#contact" class="nav-cta">Contact</a></li>
       </ul>
     </nav>
-    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" title="Light / Dark">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
-    </button>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Light / Dark"><i class="fa-solid fa-circle-half-stroke"></i></button>
   </div>
 </header>
 
@@ -537,28 +527,22 @@ filters.addEventListener('click',e=>{
 });
 renderWork('all');
 
-/* ---------- theme (light / dark) ---------- */
-(function(){
-  const root=document.documentElement,btn=document.getElementById('themeBtn');
-  const meta=document.querySelector('meta[name="theme-color"]');
-  function apply(t,save){
-    root.setAttribute('data-theme',t);
-    btn.setAttribute('aria-label',t==='dark'?'Switch to light mode':'Switch to dark mode');
-    if(meta)meta.setAttribute('content',t==='dark'?'#0F1530':'#FFFFFF');
-    if(save){try{localStorage.setItem('theme',t);}catch(e){}}
-  }
-  apply(root.getAttribute('data-theme')||'light',false);
-  btn.addEventListener('click',()=>apply(root.getAttribute('data-theme')==='dark'?'light':'dark',true));
-  /* follow the device setting until the visitor picks a theme themselves */
-  const mq=window.matchMedia('(prefers-color-scheme: dark)');
-  const follow=e=>{let saved=null;try{saved=localStorage.getItem('theme');}catch(_){}if(!saved)apply(e.matches?'dark':'light',false);};
-  mq.addEventListener?mq.addEventListener('change',follow):mq.addListener&&mq.addListener(follow);
-})();
-
 /* ---------- nav ---------- */
+const themeBtn=document.getElementById('themeBtn');
+function applyTheme(t,save){
+  document.documentElement.setAttribute('data-theme',t);
+  const dark=t==='dark';
+  themeBtn.setAttribute('aria-pressed',dark);
+  themeBtn.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+  let m=document.querySelector('meta[name="theme-color"]');
+  if(!m){m=document.createElement('meta');m.name='theme-color';document.head.appendChild(m);}
+  m.content=dark?'#1E1E1E':'#FFFFFF';
+  if(save){try{localStorage.setItem('theme',t);}catch(e){}}
+}
+applyTheme(document.documentElement.getAttribute('data-theme')||'light',false);
+themeBtn.onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
 const menuBtn=document.getElementById('menuBtn'),navmenu=document.getElementById('navmenu');
 menuBtn.onclick=()=>{const o=navmenu.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o);};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&navmenu.classList.contains('open')){navmenu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');menuBtn.focus();}});
 navmenu.addEventListener('click',e=>{if(e.target.closest('a')){navmenu.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');}});
 const links=[...navmenu.querySelectorAll('a[href^="#"]')];
 const spy=new IntersectionObserver(es=>es.forEach(en=>{
