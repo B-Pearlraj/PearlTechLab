@@ -3,7 +3,7 @@
   var me = document.currentScript;
   var API  = (me.dataset.api || 'https://pearltechlab-ai-backend.onrender.com').replace(/\/$/, '');
   var LOGO = me.dataset.logo || 'images/Logo-PTS.png';
-  var NAME = me.dataset.name || 'Pearl.AI';
+  var NAME = me.dataset.name || 'Pearl•Ai';
 
   var chips = ['What are your skills?', 'Tell me about your projects', 'What services do you offer?', 'How can I contact you?'];
 
