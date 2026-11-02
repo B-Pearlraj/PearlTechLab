@@ -14,7 +14,7 @@ def _get_model():
     global _model
     if _model is None:
         from fastembed import TextEmbedding
-        _model = TextEmbedding(EMBED_MODEL)
+        _model = TextEmbedding(EMBED_MODEL, threads=1)   # 1 thread = lower RAM on small servers
     return _model
 
 def embed_docs(texts):
