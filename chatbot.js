@@ -73,6 +73,7 @@
         el.insertAdjacentHTML('beforeend', '<div class="ai-src">Source: ' + esc(data.sources.join(', ')) + '</div>');
       history.push({ role: 'user', content: text }, { role: 'assistant', content: data.answer });
     } catch (e) {
+      console.error('Assistant request failed:', e);
       t.remove(); add('bot', 'Sorry, I can\u2019t reach the assistant right now. Please try again in a moment.', 'warn');
     }
     send.disabled = false; input.focus();
