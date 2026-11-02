@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Assistant Documents - Admin</title>
+<style>
+ body{font-family:system-ui,sans-serif;background:#050a14;color:#e8f4f8;max-width:640px;margin:40px auto;padding:0 16px}
+ h1{color:#00d4ff;font-size:1.3rem} label{display:block;margin:14px 0 4px;color:#8aaabb;font-size:.85rem}
+ input{width:100%;padding:10px;background:#151c2b;border:1px solid #2a3550;color:#fff;border-radius:8px;box-sizing:border-box}
+ button{margin-top:14px;padding:10px 18px;border:0;border-radius:8px;background:linear-gradient(135deg,#00d4ff,#7b2fff);font-weight:700;cursor:pointer}
+ #msg{margin-top:14px;color:#19c37d} table{width:100%;margin-top:24px;border-collapse:collapse}
+ td,th{padding:8px;border-bottom:1px solid #1e2940;text-align:left;font-size:.9rem} .del{background:#ff6b35;padding:4px 10px;margin:0}
+</style></head><body>
+<h1>Upload documents for the AI Assistant</h1>
+<label>Backend URL</label><input id="api" value="http://localhost:8000">
+<label>Admin token</label><input id="tok" type="password" placeholder="ADMIN_TOKEN from your .env">
+<label>File (.txt, .md, .pdf, .docx)</label><input id="file" type="file" accept=".txt,.md,.pdf,.docx">
+<button onclick="up()">Upload &amp; vectorize</button> <button onclick="load()" style="background:#1e2940;color:#fff">Refresh list</button>
+<div id="msg"></div>
+<table id="tbl"></table>
+<script>
+const $=i=>document.getElementById(i), H=()=>({'X-Admin-Token':$('tok').value}), A=()=>$('api').value.replace(/\/$/,'');
+async function up(){
+  const f=$('file').files[0]; if(!f){$('msg').textContent='Choose a file first';return}
+  const fd=new FormData(); fd.append('file',f); $('msg').textContent='Uploading and creating vectors...';
+  const r=await fetch(A()+'/upload',{method:'POST',headers:H(),body:fd}); const j=await r.json();
+  $('msg').textContent=r.ok?`Stored "${j.filename}" as ${j.chunks} chunks`:('Error: '+(j.detail||r.status)); if(r.ok)load();
+}
+async function load(){
+  const r=await fetch(A()+'/documents',{headers:H()}); if(!r.ok){$('tbl').innerHTML='';return}
+  const d=await r.json();
+  $('tbl').innerHTML='<tr><th>File</th><th>Chunks</th><th></th></tr>'+d.map(x=>`<tr><td>${x.filename}</td><td>${x.chunks}</td><td><button class="del" onclick="del(${x.id})">Delete</button></td></tr>`).join('');
+}
+async function del(id){ if(confirm('Delete this document?')){await fetch(A()+'/documents/'+id,{method:'DELETE',headers:H()});load()} }
+</script></body></html>

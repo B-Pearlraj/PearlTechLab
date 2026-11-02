@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>TechLab | Developer & Analyst</title>
+    <link rel="icon" type="image/png" href="images/Logo-PTS.png">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a3b5b5f086.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --bg: #050a14;
+            --bg2: #080f1e;
+            --accent: #00d4ff;
+            --accent2: #7b2fff;
+            --accent3: #ff6b35;
+            --gold: #ffd700;
+            --text: #e8f4f8;
+            --text-muted: #8aaabb;
+            --card: rgba(0, 212, 255, 0.04);
+            --card-border: rgba(0, 212, 255, 0.15);
+            --glow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* ── CANVAS ── */
+        #canvas3d {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 60px;
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: var(--accent);
+            text-shadow: var(--glow);
+            letter-spacing: 3px;
+        }
+
+        .logo-text span { color: var(--accent2); }
+        .logo{
+    width: 70px;
+}
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 36px;
+        }
+
+        nav ul a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        nav ul a:hover {
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            color: var(--accent);
+            font-size: 1.4rem;
+        }
+
+        /* ── HERO ── */
+        #header {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .hero-content { max-width: 800px; padding: 40px 20px; }
+
+        .hero-tag {
+            display: inline-block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            color: var(--accent);
+            border: 1px solid var(--card-border);
+            padding: 8px 20px;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            animation: fadeInDown 1s ease both;
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-title .name {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 14px 32px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            padding: 14px 32px;
+            background: transparent;
+            cursor: pointer;
+            text-decoration: none;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        /* ── SECTIONS ── */
+        section, .section {
+            position: relative;
+            z-index: 1;
+            padding: 100px 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 5px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            margin-top: 16px;
+        }
+
+        /* ── ABOUT ── */
+        #about { background: transparent; }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .about-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        .about-avatar-placeholder {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(123,47,255,0.1));
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .avatar-icon {
+            font-size: 5rem;
+            color: var(--accent);
+            opacity: 0.6;
+            margin-bottom: 16px;
+        }
+
+        .avatar-code {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent2);
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+            .about-col-1{
+            flex-basis: 35%;
+        }
+        .about-col-1 img{
+            width: 100%;
+            border-radius: 15px;
+        }
+
+        /* animated grid overlay on avatar */
+        .avatar-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .about-desc {
+            color: var(--text-muted);
+            line-height: 1.8;
+            font-size: 1rem;
+            margin-bottom: 30px;
+        }
+
+        /* TABS */
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .tab-btn.active { color: var(--accent); }
+        .tab-btn.active::after { width: 100%; }
+
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        .tab-pane ul { list-style: none; }
+        .tab-pane ul li {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(0,212,255,0.07);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .tab-pane ul li span {
+            display: block;
+            color: var(--accent);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .tab-pane ul li a {
+            color: var(--accent2);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        /* ── SERVICES ── */
+        #services {
+            background: rgba(0,0,0,0.3);
+            max-width: 100%;
+            padding: 100px 0;
+        }
+
+        #services .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .service-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            padding: 40px 30px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.4s, box-shadow 0.4s, border-color 0.4s;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,212,255,0.15);
+            border-color: rgba(0,212,255,0.4);
+        }
+
+        .service-card:hover::before { transform: scaleX(1); }
+
+        .service-icon {
+            font-size: 2.2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .service-card h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px;
+            letter-spacing: 1px;
+            line-height: 1.4;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .service-cta {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.3s;
+        }
+
+        .service-card:hover .service-cta { gap: 14px; }
+
+        /* SERVICE MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5,10,20,0.92);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--bg2);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 50px 44px;
+            max-width: 560px;
+            width: 90%;
+            position: relative;
+            animation: modalIn 0.4s ease;
+        }
+
+        .modal-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        @keyframes modalIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px; right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover { color: var(--accent); }
+
+        .modal-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .modal-sub {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        .form-group label {
+            display: block;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            background: rgba(0,212,255,0.04);
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            padding: 12px 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0,212,255,0.1);
+        }
+
+        .form-group select option { background: var(--bg2); }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+
+        .form-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+            margin-top: 10px;
+        }
+
+        .form-submit:hover { opacity: 0.9; transform: translateY(-2px); }
+
+        .form-success {
+            display: none;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .form-success i { font-size: 2.5rem; color: var(--accent); margin-bottom: 14px; display: block; }
+        .form-success p { color: var(--text-muted); }
+
+        /* ── PORTFOLIO ── */
+        #portfolio { background: transparent; }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .work-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+
+        .work-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(123,47,255,0.2);
+        }
+
+        .work-thumb {
+            width: 100%;
+            aspect-ratio: 16/10;
+            background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(123,47,255,0.08));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0.6;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .work-thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            position: absolute;
+            inset: 0;
+        }
+
+        .work-body { padding: 24px; }
+
+        .work-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: var(--accent2);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .work-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+
+        .work-desc {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .work-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: gap 0.3s;
+        }
+
+        .work-link:hover { gap: 14px; }
+
+        /* ── CONTACT ── */
+        #contact {
+            background: rgba(0,0,0,0.3);
+            max-width: 100%;
+            padding: 100px 0;
+        }
+
+        #contact .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.4fr;
+            gap: 60px;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 22px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .contact-info-item i {
+            color: var(--accent);
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        .social-row {
+            display: flex;
+            gap: 16px;
+            margin: 30px 0;
+        }
+
+        .social-row a {
+            width: 44px; height: 44px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .social-row a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 15px rgba(0,212,255,0.2);
+        }
+
+        .contact-form-card {
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            border-radius: 4px;
+            padding: 44px;
+            position: relative;
+        }
+
+        .contact-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+        }
+
+        #contact-msg {
+            margin-top: 14px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            min-height: 20px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--card-border);
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+        }
+
+        footer span { color: var(--accent); }
+
+        /* ── ANIMATIONS ── */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            nav { padding: 16px 24px; }
+            nav ul { display: none; flex-direction: column; position: absolute; top: 70px; right: 0; background: var(--bg2); border: 1px solid var(--card-border); padding: 20px 30px; gap: 18px; min-width: 200px; }
+            nav ul.open { display: flex; }
+            .hamburger { display: block; }
+            section, .section { padding: 70px 24px; }
+            #services .inner, #contact .inner { padding: 0 24px; }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; }
+            .hero-btns { flex-direction: column; align-items: center; }
+        }
+    </style>
+    <link rel="stylesheet" href="chatbot.css">
+</head>
+<body>
+
+<!-- 3D Canvas Background -->
+<canvas id="canvas3d"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+    <a href="https://instagram.com/p.e.a.r.l.r.a.j?igshid=MzNlNGNkZWQ4Mg=="><img src="images/Logo-PTS.png"class="logo">
+    <ul id="navmenu">
+        <li><a href="#header">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="portfolio-index.html">Portfolio</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+    <i class="fa-solid fa-bars hamburger" onclick="toggleMenu()"></i>
+</nav>
+
+<!-- HERO -->
+<div id="header">
+    <div class="hero-content">
+        <div class="hero-tag">// Data Scientist & Full-Stack Developer</div>
+        <h1 class="hero-title">
+            Hi, I'm
+            <span class="name">MuthuRaj</span>
+        </h1>
+        <p class="hero-sub">· Data Scientist &amp; Machine Learning Engineer &nbsp;·&nbsp; Data Analyst &nbsp;·&nbsp; PHP Full-Stack Developer ·</p>
+        <div class="hero-btns">
+            <a href="#portfolio" class="btn-primary">View My Work</a>
+            <a href="#contact" class="btn-outline">Hire Me</a>
+        </div>
+    </div>
+</div>
+
+<!-- ABOUT -->
+<div id="about">
+    <div class="section">
+        <div class="section-label">// 01 — WHO AM I</div>
+        <h2 class="section-title">About Me</h2>
+        <div class="about-grid">
+            <div>
+                <div class="about-avatar-placeholder">
+                    <div class="avatar-grid"></div>
+                    <div class="about-col-1">
+                    <img src="images/user1.png">
+                </div>
+                </div>
+            </div>
+            <div class="about-card">
+                <p class="about-desc">
+                A results-driven Data Scientist and Machine Learning Engineer with strong
+                expertise in Python, Pandas, NumPy, Scikit-learn, EDA, predictive modeling,
+                and Generative AI, complemented by full-stack development skills in PHP,
+                JavaScript, and SQL/PostgreSQL databases. With an MCA and a B.Com in Computer
+                Applications, I combine data-driven problem-solving with strong business
+                understanding — building end-to-end ML pipelines, deploying AI-powered
+                applications with FastAPI and Streamlit, and developing scalable full-stack
+                web solutions with a passion for turning data into real-world impact.
+                </p>
+
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="openTab('skills', this)">Skills</button>
+                    <button class="tab-btn" onclick="openTab('experience', this)">Experience</button>
+                    <button class="tab-btn" onclick="openTab('education', this)">Education</button>
+                    <button class="tab-btn" onclick="openTab('projects', this)">Projects</button>
+                </div>
+
+                <div class="tab-pane active" id="skills">
+                    <ul>
+                        <li><span>Data Science & ML</span>Python, Pandas, NumPy, Scikit-learn, Machine Learning, Deep Learning, NLP, EDA, Predictive Modeling</li>
+                        <li><span>Analytics & BI</span>SQL, PostgreSQL, Power BI, Statistical Analysis, Business Analytics</li>
+                        <li><span>ML & AI</span>Classification, Regression, Clustering, Feature Engineering, Generative AI</li>
+                        <li><span>Full-Stack & Deployment</span>PHP, JavaScript, HTML, CSS, FastAPI, Streamlit, AWS, Git, REST APIs</li>
+                        <li><span>Database</span>PostgreSQL, MySQL, SQLite</li>
+                    </ul>
+                </div>
+                <div class="tab-pane" id="experience">
+                    <ul>
+                        <li><span>May 2024 – July 2025</span>Kals Group of Pvt Ltd — Back-End Developer</li>
+                        <li><span>Sep 2023 – Dec 2023</span>Sevika Tech Pvt Ltd — Junior Web Developer Intern</li>
+                        <li><span>Dec 2019 – Nov 2021</span>NINT Institute Pvt Ltd — Programming Instructor</li>
+                    </ul>
+                </div>
+                <div class="tab-pane" id="education">
+                    <ul>
+                        <li><span>Aug 2026</span>Master Data Science Program — GUVI</li>
+                        <li><span>Sep 2022 – Jun 2024</span>MCA — Dhanalakshmi Srinivasan Engineering College (Anna University) · CGPA 7.66</li>
+                        <li><span>Jun 2019 – Jul 2022</span>B.Com (CA) — SRM Trichy Arts & Science College (Bharathidhasan University) · CGPA 8.36</li>
+                        <li><span>Mar 2024</span>Junior Software Developer — Govt. of Tamil Nadu · Grade A</li>
+                        <li><span>Nov 2021</span>Python, Java, SQL — NINT Institute</li>
+                        <li><span>Dec 2023</span>Game Dev (PyGame), Data Engineering — GUVI</li>
+                    </ul>
+                </div>
+                <div class="tab-pane" id="projects">
+                    <ul>
+                        <li><span>Machine Learning</span>Zepto Smart Commerce AI Platform<a href="https://zepto-smart-commerce-ai-chatbot.onrender.com">→ View</a></li>
+                        <li><span>Generative AI</span>AI Conversational Assistant<a href="https://pearl-chat-ai.onrender.com">→ View</a></li>
+                        <li><span>ML Classification</span>Job Acceptance Prediction System<a href="https://japs-placement-dashboard.onrender.com">→ View</a></li>
+                        <li><span>Full-Stack Application</span>Sales Monitoring System <a href="https://kals.co.in/Promotion-Item/SalesForm/SalesReport.html">→ View</a></li>
+                        <li><span>Figma</span>Based Landing Page <a href="https://www.figma.com/proto/v5xLNlDxDNfxWQhPfB8YlE/Untitled?page-id=24%3A19&node-id=27-164&viewport=-497%2C-524%2C0.53&t=rf3LSodqZeylewP8-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=27%3A164">→ View</a></li>
+                        <li><span>Web Development</span>Path Solutions — Educational Website <a href="https://pathsolution.netlify.app/">→ View</a></li>
+                        <li><span>Video Production</span>Brand Promotional Video Series — KALS Group<a href="https://drive.google.com/file/d/1MlP9NOXvq2hKiB2iIDOTJxlQ1SLCOSA1/view?usp=sharing">→ View</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SERVICES -->
+<div id="services">
+    <div class="inner">
+        <div class="section-label">// 02 — WHAT I DO</div>
+        <h2 class="section-title">Services</h2>
+
+        <div class="services-grid">
+
+            <div class="service-card" onclick="openModal('data')">
+                <i class="fa-solid fa-chart-line service-icon"></i>
+                <h2>Data Science & Analytics</h2>
+                <p>
+                    Turning raw data into actionable business insights using Python,
+                    Pandas, SQL, EDA, and Power BI to build predictive models and
+                    interactive dashboards.
+                </p>
+                <div class="service-cta">
+                    Explore Service <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+            <div class="service-card" onclick="openModal('aiml')">
+                <i class="fa-solid fa-brain service-icon"></i>
+                <h2>AI & Machine Learning</h2>
+                <p>
+                    Designing and deploying intelligent, production-ready solutions
+                    using Machine Learning, Deep Learning, NLP, and Generative AI to
+                    solve real-world business problems.
+                </p>
+                <div class="service-cta">
+                    Explore Service <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+            <div class="service-card" onclick="openModal('fullstack')">
+                <i class="fa-solid fa-code service-icon"></i>
+                <h2>Full-Stack Development</h2>
+                <p>
+                    Scalable and responsive web applications built end-to-end
+                    using PHP, JavaScript, and modern databases, backed by clean
+                    development practices.
+                </p>
+                <div class="service-cta">
+                    Explore Service <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+            <div class="service-card" onclick="openModal('uiux')">
+                <i class="fa-solid fa-pen-ruler service-icon"></i>
+                <h2>UI/UX & Digital Design</h2>
+                <p>
+                    Creating clean, intuitive, and user-focused digital experiences
+                    through wireframes, prototypes, responsive interfaces, and visual design.
+                </p>
+                <div class="service-cta">
+                    Explore Service <i class="fa-solid fa-arrow-right"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- SERVICE MODALS -->
+
+<!-- FULL-STACK DEVELOPMENT -->
+<div class="modal-overlay" id="modal-fullstack">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('fullstack')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-title">Full-Stack Development</div>
+        <p class="modal-sub">
+            Tell me about your project and let's build a scalable digital solution.
+        </p>
+
+        <form id="form-fullstack" onsubmit="submitServiceForm(event, 'fullstack')">
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" placeholder="Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone / Email</label>
+                <input type="text" name="contact" placeholder="Phone or Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Project Type</label>
+                <select name="service" required>
+                    <option value="">Select Project Type</option>
+                    <option>Business Website</option>
+                    <option>E-commerce Website</option>
+                    <option>Portfolio Website</option>
+                    <option>Web Application</option>
+                    <option>Dashboard / Admin Panel</option>
+                    <option>REST API / Backend</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Project Requirements</label>
+                <textarea name="requirements"
+                    placeholder="Describe your project and requirements..."
+                    required></textarea>
+            </div>
+
+            <input type="hidden" name="service_category" value="Full-Stack Development">
+
+            <button type="submit" class="form-submit">
+                SEND REQUEST →
+            </button>
+
+        </form>
+
+        <div class="form-success" id="success-fullstack">
+            <i class="fa-solid fa-circle-check"></i>
+            <p>Request sent successfully! I'll contact you soon.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- DATA ANALYTICS -->
+<div class="modal-overlay" id="modal-data">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('data')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-title">Data Science & Analytics</div>
+        <p class="modal-sub">
+            Share your data challenge and let's turn your data into meaningful insights.
+        </p>
+
+        <form id="form-data" onsubmit="submitServiceForm(event, 'data')">
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" placeholder="Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone / Email</label>
+                <input type="text" name="contact" placeholder="Phone or Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Service Required</label>
+                <select name="service" required>
+                    <option value="">Select Service</option>
+                    <option>Data Analysis</option>
+                    <option>Power BI Dashboard</option>
+                    <option>Excel Analysis</option>
+                    <option>Data Visualization</option>
+                    <option>SQL Analysis</option>
+                    <option>Custom Analytics Solution</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Data & Requirements</label>
+                <textarea name="requirements"
+                    placeholder="Describe your dataset, business problem, or insights you need..."
+                    required></textarea>
+            </div>
+
+            <input type="hidden" name="service_category" value="Data Science & Analytics">
+
+            <button type="submit" class="form-submit">
+                SEND REQUEST →
+            </button>
+
+        </form>
+
+        <div class="form-success" id="success-data">
+            <i class="fa-solid fa-circle-check"></i>
+            <p>Request sent successfully! I'll contact you soon.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- AI & MACHINE LEARNING -->
+<div class="modal-overlay" id="modal-aiml">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('aiml')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-title">AI & Machine Learning</div>
+        <p class="modal-sub">
+            Let's explore how AI and machine learning can solve your real-world problem.
+        </p>
+
+        <form id="form-aiml" onsubmit="submitServiceForm(event, 'aiml')">
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" placeholder="Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone / Email</label>
+                <input type="text" name="contact" placeholder="Phone or Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>AI / ML Service</label>
+                <select name="service" required>
+                    <option value="">Select AI / ML Service</option>
+                    <option>Machine Learning</option>
+                    <option>Deep Learning</option>
+                    <option>NLP</option>
+                    <option>Generative AI</option>
+                    <option>AI Chatbot</option>
+                    <option>Prediction / Classification</option>
+                    <option>Custom AI Solution</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Project Requirements</label>
+                <textarea name="requirements"
+                    placeholder="Describe your problem, dataset, or AI requirement..."
+                    required></textarea>
+            </div>
+
+            <input type="hidden" name="service_category" value="AI & Machine Learning">
+
+            <button type="submit" class="form-submit">
+                SEND REQUEST →
+            </button>
+
+        </form>
+
+        <div class="form-success" id="success-aiml">
+            <i class="fa-solid fa-circle-check"></i>
+            <p>Request sent successfully! I'll contact you soon.</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- UI/UX & DIGITAL DESIGN -->
+<div class="modal-overlay" id="modal-uiux">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal('uiux')">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="modal-title">UI/UX & Digital Design</div>
+        <p class="modal-sub">
+            Let's create a clean, intuitive, and engaging digital experience.
+        </p>
+
+        <form id="form-uiux" onsubmit="submitServiceForm(event, 'uiux')">
+
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" name="name" placeholder="Name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone / Email</label>
+                <input type="text" name="contact" placeholder="Phone or Email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Design Scope</label>
+                <select name="service" required>
+                    <option value="">Select Design Scope</option>
+                    <option>Website UI/UX</option>
+                    <option>Web Application UI</option>
+                    <option>Landing Page</option>
+                    <option>Figma Prototype</option>
+                    <option>Dashboard Design</option>
+                    <option>Branding & Visual Design</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Design Requirements</label>
+                <textarea name="requirements"
+                    placeholder="Describe your design requirements, preferred style, or reference..."
+                    required></textarea>
+            </div>
+
+            <input type="hidden" name="service_category" value="UI/UX & Digital Design">
+
+            <button type="submit" class="form-submit">
+                SEND REQUEST →
+            </button>
+
+        </form>
+
+        <div class="form-success" id="success-uiux">
+            <i class="fa-solid fa-circle-check"></i>
+            <p>Request sent successfully! I'll contact you soon.</p>
+        </div>
+    </div>
+</div>
+
+<!-- PORTFOLIO -->
+<div id="portfolio">
+    <div class="section">
+        <div class="section-label">// 03 — MY WORK</div>
+        <h2 class="section-title">Live Projects</h2>
+        <div class="portfolio-grid">
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-1.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-robot" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Machine Learning · Deployment</div>
+                    <h3 class="work-title">Zepto Smart Commerce AI Platform</h3>
+                    <p class="work-desc">Built and deployed an end-to-end ML platform using HistGradientBoosting, FastAPI, Streamlit, and PostgreSQL, achieving R² 0.94–0.95 and ROC-AUC 0.97.</p>
+                    <a href="https://zepto-smart-commerce-ai-chatbot.onrender.com" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-5.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-comments" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Generative AI</div>
+                    <h3 class="work-title">AI Conversational Assistant</h3>
+                    <p class="work-desc">Built an AI-powered assistant using Streamlit, FastAPI, and Deep Agents with chat history, web search, API integration, and coding support.</p>
+                    <a href="https://pearl-chat-ai.onrender.com" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-6.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-user-check" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">ML Classification</div>
+                    <h3 class="work-title">Job Acceptance Prediction System</h3>
+                    <p class="work-desc">Built an ML classification pipeline on 51.5K candidate records (Logistic Regression, Decision Tree, Random Forest), achieving 88.3% accuracy and 0.79 F1-score.</p>
+                    <a href="https://japs-placement-dashboard.onrender.com" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-7.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-eye" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Deep Learning</div>
+                    <h3 class="work-title">Driver Drowsiness Detection</h3>
+                    <p class="work-desc">Developed a CNN and MobileNetV2-based deep learning system on 2.9K+ images, achieving 99.1% eye-state test accuracy across three fatigue levels.</p>
+                    <a href="https://driver-drowsiness-dl.onrender.com" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-8.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-chart-line" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Data Analysis</div>
+                    <h3 class="work-title">Online Food Delivery Analysis</h3>
+                    <p class="work-desc">Analyzed 100K+ orders using Python, Pandas, NumPy, and PostgreSQL, applying data cleaning, IQR outlier detection, and SQL/EDA to identify revenue and delivery trends.</p>
+                    <a href="https://online-food-delivery-analysis-ler3.onrender.com" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-9.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-pen-ruler" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">UI/UX Design</div>
+                    <h3 class="work-title">Analytics Avenue — Landing Page Prototype</h3>
+                    <p class="work-desc">Designed a modern, responsive landing page in Figma with strong visual hierarchy and conversion-focused sections.</p>
+                    <a href="https://www.figma.com/proto/v5xLNlDxDNfxWQhPfB8YlE/Untitled?page-id=24%3A19&node-id=27-164&viewport=-497%2C-524%2C0.53&t=rf3LSodqZeylewP8-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=27%3A164" class="work-link" target="_blank">View Prototype <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-10.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-store" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">E-Commerce</div>
+                    <h3 class="work-title">Shopify Store — UK Marble Company</h3>
+                    <p class="work-desc">Built a custom Shopify storefront with dynamic pricing, product bundling, and responsive design for a UK-based marble company. (Store password: MAI)</p>
+                    <a href="https://mai-task.myshopify.com/password" class="work-link" target="_blank">View Store <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-11.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-video" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Video Production</div>
+                    <h3 class="work-title">Brand Promotional Video Series — KALS Group</h3>
+                    <p class="work-desc">Created and edited brand reveal, product-launch, and promotional videos — including a Foster's Cool Blue Lager launch screened in resto-bars.</p>
+                    <a href="https://drive.google.com/file/d/1gr8NMAendVYQU-smMqAolDHfWifsT0rv/view?usp=sharing" class="work-link" target="_blank">View Video <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-2.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-globe" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Web Development</div>
+                    <h3 class="work-title">Path Solution Website</h3>
+                    <p class="work-desc">Designed and deployed a professional website now live and available on social media platforms.</p>
+                    <a href="https://pathsolution.netlify.app/" class="work-link" target="_blank">View Live <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-3.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-book-open" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Educational Resource</div>
+                    <h3 class="work-title">Programming Notes</h3>
+                    <p class="work-desc">Structured, beginner-friendly programming notes covering multiple languages, available for download.</p>
+                    <a href="https://drive.google.com/drive/folders/1YoRSkM7Oe8YyRf_tD_Ujpav_uVia9jRK" class="work-link" target="_blank">Download Notes <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="work-card">
+                <div class="work-thumb">
+                    <img src="images/work-4.png" onerror="this.style.display='none'">
+                    <i class="fa-solid fa-mobile-screen" style="position:relative;z-index:1"></i>
+                </div>
+                <div class="work-body">
+                    <div class="work-tag">Android Studio</div>
+                    <h3 class="work-title">Medicine Project Design</h3>
+                    <p class="work-desc">Built a medical management application for Dhanalakshmi Srinivasan Engineering College using Android Studio.</p>
+                    <a href="https://www.linkedin.com/posts/muthuraj-b-909ab8281_data-project-medical-activity-7082014104961380352-4K4X" class="work-link" target="_blank">View Project <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:50px;">
+            <a href="portfolio-index.html#projects" class="btn-outline">See More on Projects</a>
+        </div>
+    </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact">
+    <div class="inner">
+        <div class="section-label">// 04 — GET IN TOUCH</div>
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-grid">
+            <div>
+                <div class="contact-info-item"><i class="fa-solid fa-envelope"></i> bmuthuraj2002@gmail.com</div>
+                <div class="contact-info-item"><i class="fa-solid fa-phone"></i> +91 82489 78489</div>
+                <div class="contact-info-item"><i class="fa-solid fa-location-dot"></i> Tamil Nadu, India</div>
+                <div class="social-row">
+                    <a href="https://wa.link/iiyy3h" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="https://instagram.com/p.e.a.r.l.r.a.j" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/muthuraj-balamurugan-909ab8281" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="contact-form-card">
+                <form name="submit-to-google-sheet" onsubmit="submitContactForm(event)">
+                    <div class="form-group"><label>Full Name</label><input type="text" name="Name" placeholder="Your name" required></div>
+                    <div class="form-group"><label>Phone Number</label><input type="number" name="Email" placeholder="Your number" required></div>
+                    <div class="form-group"><label>Message</label><textarea name="Message" rows="5" placeholder="Your requirements..."></textarea></div>
+                    <button type="submit" class="form-submit">SEND MESSAGE →</button>
+                </form>
+                <div id="contact-msg"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p>· © 2026 <span>PearlRaj Software Solution ·</p>
+</footer>
+
+<!-- JS -->
+<script>
+// ── 3D CANVAS BACKGROUND ──
+(function() {
+    const canvas = document.getElementById('canvas3d');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [], lines = [], t = 0;
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+
+    function initParticles() {
+        particles = [];
+        const count = Math.floor((W * H) / 8000);
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * W,
+                y: Math.random() * H,
+                z: Math.random() * 2 + 0.5,
+                vx: (Math.random() - 0.5) * 0.3,
+                vy: (Math.random() - 0.5) * 0.3,
+                r: Math.random() * 1.5 + 0.5
+            });
+        }
+    }
+
+    function drawGrid() {
+        const gridSize = 80;
+        const perspective = 400;
+        const camY = H * 0.7;
+        ctx.strokeStyle = 'rgba(0,212,255,0.04)';
+        ctx.lineWidth = 1;
+
+        // Horizontal grid lines (floor)
+        for (let row = -5; row < 20; row++) {
+            const z = row * gridSize - (t * 20 % gridSize);
+            const scale = perspective / (perspective + z);
+            if (scale < 0) continue;
+            const y = camY - (z * 0.5 * scale);
+            const xSpan = W * 2 * scale;
+            ctx.beginPath();
+            ctx.moveTo((W - xSpan) / 2, y);
+            ctx.lineTo((W + xSpan) / 2, y);
+            ctx.stroke();
+        }
+
+        // Vertical grid lines
+        for (let col = -8; col <= 8; col++) {
+            ctx.beginPath();
+            let first = true;
+            for (let row = -5; row < 20; row++) {
+                const z = row * gridSize - (t * 20 % gridSize);
+                const scale = perspective / (perspective + z);
+                if (scale < 0) continue;
+                const y = camY - (z * 0.5 * scale);
+                const xSpan = W * 2 * scale;
+                const x = W / 2 + col * (xSpan / 16);
+                if (first) { ctx.moveTo(x, y); first = false; }
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+        }
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // gradient bg
+        const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H));
+        grad.addColorStop(0, 'rgba(8,15,30,0)');
+        grad.addColorStop(1, 'rgba(5,10,20,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        drawGrid();
+
+        // Connect nearby particles
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 140) {
+                    ctx.strokeStyle = `rgba(0,212,255,${0.12 * (1 - dist / 140)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Draw particles
+        particles.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0) p.x = W;
+            if (p.x > W) p.x = 0;
+            if (p.y < 0) p.y = H;
+            if (p.y > H) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * p.z, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0,212,255,${0.4 * p.z})`;
+            ctx.fill();
+        });
+
+        // Floating orbs
+        const orb1x = W * 0.15 + Math.sin(t * 0.4) * 60;
+        const orb1y = H * 0.3 + Math.cos(t * 0.3) * 40;
+        const g1 = ctx.createRadialGradient(orb1x, orb1y, 0, orb1x, orb1y, 200);
+        g1.addColorStop(0, 'rgba(123,47,255,0.12)');
+        g1.addColorStop(1, 'rgba(123,47,255,0)');
+        ctx.fillStyle = g1;
+        ctx.beginPath();
+        ctx.arc(orb1x, orb1y, 200, 0, Math.PI * 2);
+        ctx.fill();
+
+        const orb2x = W * 0.8 + Math.cos(t * 0.35) * 80;
+        const orb2y = H * 0.6 + Math.sin(t * 0.45) * 50;
+        const g2 = ctx.createRadialGradient(orb2x, orb2y, 0, orb2x, orb2y, 180);
+        g2.addColorStop(0, 'rgba(0,212,255,0.1)');
+        g2.addColorStop(1, 'rgba(0,212,255,0)');
+        ctx.fillStyle = g2;
+        ctx.beginPath();
+        ctx.arc(orb2x, orb2y, 180, 0, Math.PI * 2);
+        ctx.fill();
+
+        t += 0.008;
+        requestAnimationFrame(draw);
+    }
+
+    resize();
+    initParticles();
+    draw();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+})();
+
+// ── NAV ──
+function toggleMenu() {
+    document.getElementById('navmenu').classList.toggle('open');
+}
+
+// ── TABS ──
+function openTab(tabId, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+}
+
+// ── SERVICE MODALS ──
+function openModal(id) {
+    document.getElementById('modal-' + id).classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(id) {
+    document.getElementById('modal-' + id).classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function submitServiceForm(id) {
+    document.getElementById('form-' + id).style.display = 'none';
+    document.getElementById('success-' + id).style.display = 'block';
+    setTimeout(() => {
+        closeModal(id);
+        setTimeout(() => {
+            document.getElementById('form-' + id).style.display = 'block';
+            document.getElementById('success-' + id).style.display = 'none';
+        }, 400);
+    }, 2500);
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', e => {
+        if (e.target === overlay) {
+            const id = overlay.id.replace('modal-', '');
+            closeModal(id);
+        }
+    });
+});
+
+// ── CONTACT FORM ──
+function submitContactForm(e) {
+    e.preventDefault();
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxahgb9gA8Ym_tBWLeYpPsnMreqa8JrnaueqyO91fiIJQhxXUPGsFgcbSqxCS5wN3xo/exec';
+    const form = e.target;
+    const msg = document.getElementById('contact-msg');
+    fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+        .then(() => {
+            msg.innerHTML = '✓ Message sent successfully!';
+            form.reset();
+            setTimeout(() => msg.innerHTML = '', 5000);
+        })
+        .catch(() => {
+            msg.innerHTML = '✗ Error sending. Try email directly.';
+        });
+}
+// ── SERVICE FORM SUBMISSION ──
+function submitServiceForm(e, serviceType) {
+
+    // Stop normal form submission
+    e.preventDefault();
+
+    const scriptURL =
+        'https://script.google.com/macros/s/AKfycbxahgb9gA8Ym_tBWLeYpPsnMreqa8JrnaueqyO91fiIJQhxXUPGsFgcbSqxCS5wN3xo/exec';
+
+    const form = e.target;
+    const successMessage = document.getElementById('success-' + serviceType);
+    const submitButton = form.querySelector('.form-submit');
+
+    // Browser automatically checks required fields
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    // Disable button while sending
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'SENDING...';
+
+    // Send all form data to Google Apps Script
+    fetch(scriptURL, {
+        method: 'POST',
+        body: new FormData(form)
+    })
+    .then(response => {
+
+        // Hide form
+        form.style.display = 'none';
+
+        // Show success message
+        successMessage.style.display = 'block';
+
+        // Reset form
+        form.reset();
+
+        // Restore button
+        submitButton.disabled = false;
+        submitButton.innerHTML = 'SEND REQUEST →';
+
+        // Close modal after 3 seconds
+        setTimeout(() => {
+            closeModal(serviceType);
+
+            form.style.display = 'block';
+            successMessage.style.display = 'none';
+
+        }, 3000);
+
+    })
+    .catch(error => {
+
+        console.error('Error:', error);
+
+        submitButton.disabled = false;
+        submitButton.innerHTML = 'SEND REQUEST →';
+
+        alert('Error sending request. Please try again.');
+    });
+}
+</script>
+
+<!-- AI Assistant widget: set data-api to your deployed backend URL -->
+<script src="chatbot.js" data-api="http://localhost:8000" data-logo="images/Logo-PTS.png" data-name="PearlRaj AI Assistant"></script>
+</body>
+</html>
