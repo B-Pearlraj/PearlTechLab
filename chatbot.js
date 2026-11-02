@@ -3,7 +3,7 @@
   var me = document.currentScript;
   var API  = (me.dataset.api || 'http://localhost:8000').replace(/\/$/, '');
   var LOGO = me.dataset.logo || 'images/Logo-PTS.png';
-  var NAME = me.dataset.name || 'PearlRaj AI Assistant';
+  var NAME = me.dataset.name || 'Pearl AI';
 
   var chips = ['What are your skills?', 'Tell me about your projects', 'What services do you offer?', 'How can I contact you?'];
 
@@ -18,7 +18,7 @@
       '<div class="ai-msgs" id="ai-msgs"></div>' +
       '<div class="ai-chips" id="ai-chips"></div>' +
       '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
-      '<div class="ai-foot">Answers come from MuthuRaj\u2019s portfolio documents only</div>' +
+      '<div class="ai-foot">Answers come from MuthuRaj\u2019s  documents only</div>' +
     '</section>');
 
   var $ = function (id) { return document.getElementById(id); };
