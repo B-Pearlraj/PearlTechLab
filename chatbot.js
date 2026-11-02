@@ -8,17 +8,17 @@
   var chips = ['What are your skills?', 'Tell me about your projects', 'What services do you offer?', 'How can I contact you?'];
 
   document.body.insertAdjacentHTML('beforeend',
-    '<button id="ai-launcher" aria-label="Open AI assistant">' +
+    '<button id="ai-launcher" aria-label="Open AI assistant" aria-expanded="false" aria-controls="ai-panel">' +
       '<img src="' + LOGO + '" alt="" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">' +
       '<i class="fa-solid fa-robot ai-fallback"></i><span class="ai-dot"></span></button>' +
     '<div id="ai-panel" role="dialog" aria-label="AI assistant chat">' +
       '<div class="ai-head"><img src="' + LOGO + '" alt="" onerror="this.style.display=\'none\'">' +
         '<div><div class="ai-title">' + NAME + '</div><div class="ai-status">Online</div></div>' +
         '<button class="ai-close" aria-label="Close">&times;</button></div>' +
-      '<div class="ai-msgs" id="ai-msgs"></div>' +
+      '<div class="ai-msgs" id="ai-msgs" role="log" aria-live="polite"></div>' +
       '<div class="ai-chips" id="ai-chips"></div>' +
       '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
-      '<div class="ai-foot">Answers come from MuthuRaj\u2019s  documents only</div>' +
+      '<div class="ai-foot">Answers come from MuthuRaj\u2019s documents only</div>' +
     '</div>');
 
   var $ = function (id) { return document.getElementById(id); };
@@ -44,10 +44,14 @@
 
   function toggle(open) {
     panel.classList.toggle('open', open);
+    $('ai-launcher').setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open) setTimeout(function () { input.focus(); }, 250);
   }
   $('ai-launcher').onclick = function () { toggle(!panel.classList.contains('open')); };
-  panel.querySelector('.ai-close').onclick = function () { toggle(false); };
+  panel.querySelector('.ai-close').onclick = function () { toggle(false); $('ai-launcher').focus(); };
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && panel.classList.contains('open')) { toggle(false); $('ai-launcher').focus(); }
+  });
 
   add('bot', 'Hi! I\u2019m MuthuRaj\u2019s AI assistant. Ask me about his skills, projects, experience or services.');
   chips.forEach(function (c) {
