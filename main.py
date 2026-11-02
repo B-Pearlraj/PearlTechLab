@@ -39,6 +39,11 @@ app.add_middleware(CORSMiddleware,
 @app.on_event("startup")
 def startup():
     rag.init_db()
+    try:                                   # load the embedding model at boot so problems show in the Render logs
+        rag.embed_query("warm up")
+        log.info("embedding model ready")
+    except Exception:
+        log.exception("embedding model failed to load")
 
 class Turn(BaseModel):
     role: str
@@ -65,7 +70,11 @@ def chat(body: ChatIn):
         if prev:
             query = prev[-1] + " " + msg
 
-    hits = rag.search(query, k=4)
+    try:
+        hits = rag.search(query, k=4)
+    except Exception:
+        log.exception("Vector search failed (database or embedding problem)")
+        raise HTTPException(502, "Search is unavailable")
     if not hits or hits[0]["score"] < MIN_SCORE:        # gate 1: nothing similar in the documents
         return {"answer": OFF_TOPIC, "sources": [], "relevant": False}
 
@@ -115,3 +124,28 @@ def delete(doc_id: int, x_admin_token: str = Header(None)):
     need_admin(x_admin_token)
     rag.delete_document(doc_id)
     return {"deleted": doc_id}
+
+@app.get("/diag")
+def diag(token: str = None, x_admin_token: str = Header(None)):
+    """Open  /diag?token=YOUR_ADMIN_TOKEN  in a browser to see which part is failing."""
+    need_admin(token or x_admin_token)
+    out = {"model": MODEL, "llm_base_url": str(llm.base_url)}
+    try:
+        with rag.connect() as c:
+            out["database"] = "ok"
+            out["documents"] = c.execute("SELECT count(*) FROM documents").fetchone()[0]
+            out["chunks"] = c.execute("SELECT count(*) FROM chunks").fetchone()[0]
+    except Exception as e:
+        out["database"] = f"FAIL: {type(e).__name__}: {e}"
+    try:
+        out["embeddings"] = f"ok ({len(rag.embed_query('test'))} dimensions)"
+    except Exception as e:
+        out["embeddings"] = f"FAIL: {type(e).__name__}: {e}"
+    try:
+        extra = {"reasoning_effort": "low"} if MODEL.startswith("openai/gpt-oss") else {}
+        r = llm.chat.completions.create(model=MODEL, messages=[{"role": "user", "content": "Reply with the word OK"}],
+                                        max_tokens=200, extra_body=extra)
+        out["llm"] = "ok: " + (r.choices[0].message.content or "(empty reply)")[:60]
+    except Exception as e:
+        out["llm"] = f"FAIL: {type(e).__name__}: {str(e)[:300]}"
+    return out
