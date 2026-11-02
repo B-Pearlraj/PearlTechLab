@@ -1,9 +1,9 @@
 /* AI Assistant widget. Injects its own markup; configured by data-* attributes on the <script> tag. */
 (function () {
   var me = document.currentScript;
-  var API  = (me.dataset.api || 'http://localhost:8000').replace(/\/$/, '');
+  var API  = (me.dataset.api || 'https://pearltechlab-ai-backend.onrender.com').replace(/\/$/, '');
   var LOGO = me.dataset.logo || 'images/Logo-PTS.png';
-  var NAME = me.dataset.name || 'Pearl AI';
+  var NAME = me.dataset.name || 'Pearl.AI';
 
   var chips = ['What are your skills?', 'Tell me about your projects', 'What services do you offer?', 'How can I contact you?'];
 
