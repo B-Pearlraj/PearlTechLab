@@ -72,9 +72,7 @@
       if (!r.ok) throw new Error('HTTP ' + r.status);
       var data = await r.json();
       t.remove();
-      var el = add('bot', data.answer, data.relevant ? '' : 'warn');
-      if (data.relevant && data.sources && data.sources.length)
-        el.insertAdjacentHTML('beforeend', '<div class="ai-src">Source: ' + esc(data.sources.join(', ')) + '</div>');
+      add('bot', data.answer, data.relevant ? '' : 'warn');
       history.push({ role: 'user', content: text }, { role: 'assistant', content: data.answer });
     } catch (e) {
       console.error('Assistant request failed:', e);
