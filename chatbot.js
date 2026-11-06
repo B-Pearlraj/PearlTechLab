@@ -18,7 +18,7 @@
       '<div class="ai-msgs" id="ai-msgs" role="log" aria-live="polite"></div>' +
       '<div class="ai-chips" id="ai-chips"></div>' +
       '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
-      '<div class="ai-foot">Answers come from MuthuRaj\u2019s documents only</div>' +
+      '<div class="ai-foot">✹Pearl.ai</div>' +
     '</div>');
 
   var $ = function (id) { return document.getElementById(id); };
