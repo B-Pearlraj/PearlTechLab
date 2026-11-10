@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>Knowledge Base | Pearl-Ai Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070c18;--sf:#0f1729;--bd:rgba(148,163,184,.16);--tx:#e6eef7;--mt:#8a9bb0;--c1:#00d4ff;--c2:#7b2fff}
+*{box-sizing:border-box;margin:0}
+body{font:500 1.05rem 'Rajdhani',system-ui,sans-serif;background:radial-gradient(900px 400px at 10% -10%,rgba(0,212,255,.12),transparent),radial-gradient(900px 400px at 100% 0,rgba(123,47,255,.14),transparent),var(--bg);color:var(--tx);min-height:100vh;padding:32px 16px 60px}
+.wrap{max-width:760px;margin:0 auto}
+header{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+header img{width:46px;height:46px;object-fit:contain}
+h1{font:600 1.05rem 'Orbitron',sans-serif;letter-spacing:1.5px}header p{color:var(--mt)}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:22px;margin-bottom:18px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+h2{font-size:1.15rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+h2 .pill{margin-left:auto;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--mt)}
+h2 .pill.ok{background:rgba(34,197,94,.15);color:#4ade80}h2 .pill.bad{background:rgba(239,68,68,.15);color:#f87171}
+label{display:block;font-size:.85rem;color:var(--mt);margin:12px 0 5px;letter-spacing:.5px}
+.field{display:flex;gap:8px}
+input[type=text],input[type=password]{width:100%;padding:11px 13px;background:#0a1120;border:1px solid var(--bd);border-radius:10px;color:var(--tx);font:inherit;outline:0}
+input:focus{border-color:var(--c1);box-shadow:0 0 0 3px rgba(0,212,255,.12)}
+.btn{border:0;border-radius:10px;padding:10px 18px;font:700 1rem 'Rajdhani',sans-serif;cursor:pointer;color:#fff;background:linear-gradient(135deg,#00b8e6,#7b2fff);transition:.2s;white-space:nowrap}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,184,230,.25)}.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:#16203a;border:1px solid var(--bd);color:var(--tx)}.btn.danger{background:rgba(239,68,68,.14);color:#f87171;padding:5px 12px}
+.drop{margin-top:6px;border:2px dashed rgba(0,212,255,.3);border-radius:14px;padding:28px 16px;text-align:center;color:var(--mt);cursor:pointer;transition:.2s}
+.drop:hover,.drop.over{border-color:var(--c1);background:rgba(0,212,255,.05);color:var(--tx)}
+.drop b{display:block;color:var(--tx);font-size:1.1rem;margin-bottom:4px}.drop small{font-size:.85rem}
+.chosen{margin-top:12px;display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.chosen span{color:#7ee7ff;overflow-wrap:anywhere}
+table{width:100%;border-collapse:collapse}
+th{font-size:.78rem;letter-spacing:1.2px;text-transform:uppercase;color:var(--mt);text-align:left;padding:8px;border-bottom:1px solid var(--bd)}
+td{padding:11px 8px;border-bottom:1px solid rgba(148,163,184,.08)}td:last-child,th:last-child{text-align:right}
+.empty{text-align:center;color:var(--mt);padding:22px 0}
+#toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);opacity:0;padding:12px 20px;border-radius:12px;background:#16203a;border:1px solid var(--bd);box-shadow:0 12px 30px rgba(0,0,0,.5);transition:.3s;pointer-events:none;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}#toast.ok{border-color:#22c55e}#toast.bad{border-color:#ef4444}
+@media(max-width:560px){.field{flex-wrap:wrap}.card{padding:16px}}
+</style></head><body><div class="wrap">
+<header><img src="images/Logo-PTS.png" alt="" onerror="this.style.display='none'"><div><h1>KNOWLEDGE BASE</h1><p>Pearl-Ai assistant &middot; document manager</p></div></header>
+
+<section class="card"><h2>Connection <span class="pill" id="st">Not checked</span></h2>
+<label>Backend URL</label><input type="text" id="api" value="https://pearltechlab-ai-backend.onrender.com">
+<label>Admin password</label>
+<div class="field"><input type="password" id="tok" placeholder="Enter your admin password" autocomplete="off">
+<button class="btn ghost" id="eye" type="button">Show</button><button class="btn" id="check" type="button">Connect</button></div></section>
+
+<section class="card"><h2>Upload a document</h2>
+<div class="drop" id="drop"><b>Drag &amp; drop a file here, or click to browse</b><small>.txt, .md, .pdf, .docx &middot; up to 5 MB &middot; re-uploading the same file name replaces it</small></div>
+<input type="file" id="file" accept=".txt,.md,.pdf,.docx" hidden>
+<div class="chosen" id="chosen" hidden><span id="fname"></span><button class="btn" id="up" type="button">Upload &amp; vectorize</button></div></section>
+
+<section class="card"><h2>Documents <span class="pill" id="count">0</span></h2><div id="list"><p class="empty">Connect to see your documents.</p></div></section>
+</div><div id="toast"></div>
+<script>
+const $=i=>document.getElementById(i),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const A=()=>$('api').value.trim().replace(/\/$/,''),H=()=>({'X-Admin-Token':$('tok').value});
+let file=null,tt;
+$('api').value=localStorage.getItem('ai_api')||$('api').value;$('tok').value=sessionStorage.getItem('ai_tok')||'';
+function toast(m,t){const e=$('toast');e.textContent=m;e.className='show '+(t||'');clearTimeout(tt);tt=setTimeout(()=>e.className='',3800)}
+function pill(t,c){$('st').textContent=t;$('st').className='pill '+(c||'')}
+$('eye').onclick=()=>{const p=$('tok').type==='password';$('tok').type=p?'text':'password';$('eye').textContent=p?'Hide':'Show'};
+async function connect(){
+  localStorage.setItem('ai_api',A());sessionStorage.setItem('ai_tok',$('tok').value);pill('Connecting...');
+  try{const h=await fetch(A()+'/health');if(!h.ok)throw 0}catch(e){pill('Unreachable','bad');toast('Cannot reach the backend. If it was idle, wait a minute and retry.','bad');return}
+  const ok=await load();pill(ok?'Connected':'Wrong password',ok?'ok':'bad')
+}
+async function load(){
+  try{const r=await fetch(A()+'/documents',{headers:H()});
+  if(!r.ok){$('list').innerHTML='<p class="empty">Enter a valid admin password.</p>';$('count').textContent='0';return false}
+  const d=await r.json();$('count').textContent=d.length;
+  $('list').innerHTML=d.length?'<table><tr><th>File</th><th>Chunks</th><th>Added</th><th></th></tr>'+d.map(x=>`<tr><td>${esc(x.filename)}</td><td>${x.chunks}</td><td>${new Date(x.created_at).toLocaleDateString()}</td><td><button class="btn danger" onclick="del(${+x.id})">Delete</button></td></tr>`).join('')+'</table>':'<p class="empty">No documents yet. Upload your first one above.</p>';
+  return true}catch(e){return false}
+}
+function pick(f){if(!f)return;file=f;$('fname').textContent=f.name+' ('+(f.size/1024).toFixed(0)+' KB)';$('chosen').hidden=false}
+$('drop').onclick=()=>$('file').click();$('file').onchange=e=>pick(e.target.files[0]);
+['dragover','dragenter'].forEach(v=>$('drop').addEventListener(v,e=>{e.preventDefault();$('drop').classList.add('over')}));
+['dragleave','drop'].forEach(v=>$('drop').addEventListener(v,e=>{e.preventDefault();$('drop').classList.remove('over')}));
+$('drop').addEventListener('drop',e=>pick(e.dataTransfer.files[0]));
+$('up').onclick=async()=>{
+  if(!file)return;const b=$('up');b.disabled=true;b.textContent='Creating vectors...';
+  try{const fd=new FormData();fd.append('file',file);const r=await fetch(A()+'/upload',{method:'POST',headers:H(),body:fd});const j=await r.json();
+  if(r.ok){toast(`Stored "${j.filename}" as ${j.chunks} chunks`,'ok');$('chosen').hidden=true;$('file').value='';file=null;load()}else toast(j.detail||('Error '+r.status),'bad')}
+  catch(e){toast('Upload failed. Check the backend URL.','bad')}
+  b.disabled=false;b.textContent='Upload & vectorize'
+};
+async function del(id){if(!confirm('Delete this document and its vectors?'))return;await fetch(A()+'/documents/'+id,{method:'DELETE',headers:H()});toast('Document deleted','ok');load()}
+$('check').onclick=connect;$('tok').onkeydown=e=>{if(e.key==='Enter')connect()};if($('tok').value)connect();
+</script></body></html>
