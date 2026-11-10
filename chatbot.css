@@ -97,12 +97,22 @@
 .ai-typing span:nth-child(2){ animation-delay:.15s } .ai-typing span:nth-child(3){ animation-delay:.3s }
 @keyframes aiBounce{ 0%,60%,100%{transform:translateY(0);opacity:.4} 30%{transform:translateY(-5px);opacity:1} }
 
-/* ---------- Suggestion chips (same look as the site's skill tags) ---------- */
-.ai-chips{ display:flex; flex-wrap:wrap; gap:8px; padding:0 16px 12px; }
-.ai-chips button{ background:transparent; border:1px solid var(--ai-border); color:var(--ai-text);
-  border-radius:999px; padding:6px 12px; font-size:.8rem; cursor:pointer; font-family:inherit;
+/* ---------- Suggested questions (always available between chat and input) ---------- */
+.ai-sugg{ border-top:1px solid var(--ai-border); background:var(--ai-bg); }
+.ai-sugg-toggle{ width:100%; display:flex; align-items:center; justify-content:space-between;
+  background:none; border:none; color:var(--ai-muted); font:inherit; font-size:.82rem; font-weight:500;
+  padding:9px 16px; cursor:pointer; text-align:left; }
+.ai-sugg-toggle:hover{ color:var(--ai-text); }
+.ai-sugg-toggle svg{ width:20px; height:20px; fill:currentColor; transition:transform .2s; }
+.ai-sugg.closed .ai-sugg-toggle svg{ transform:rotate(180deg); }
+.ai-sugg-list{ display:flex; flex-wrap:wrap; gap:8px; padding:0 16px 12px; max-height:150px; overflow-y:auto; }
+.ai-sugg.closed .ai-sugg-list{ display:none; }
+.ai-sugg-list::-webkit-scrollbar{ width:5px }
+.ai-sugg-list::-webkit-scrollbar-thumb{ background:var(--ai-border); border-radius:3px }
+.ai-sugg-list button{ background:transparent; border:1px solid var(--ai-border); color:var(--ai-text);
+  border-radius:999px; padding:6px 12px; font-size:.8rem; cursor:pointer; font-family:inherit; text-align:left;
   transition:border-color .15s, background .15s; }
-.ai-chips button:hover{ border-color:var(--ai-accent); background:var(--ai-surface); }
+.ai-sugg-list button:hover{ border-color:var(--ai-accent); background:var(--ai-surface); }
 
 /* ---------- Input ---------- */
 .ai-form{ display:flex; gap:8px; padding:12px; border-top:1px solid var(--ai-border); background:var(--ai-surface); }
@@ -122,4 +132,5 @@
   #ai-launcher{ right:16px; bottom:16px; width:56px; height:56px; }
   #ai-panel{ right:12px; left:12px; width:auto; bottom:84px; height:calc(100vh - 104px); }
   .ai-form input{ font-size:16px; }   /* stops iOS zooming the page on focus */
+  .ai-sugg-list{ max-height:110px; }
 }
