@@ -115,7 +115,7 @@
     if (talk) {
       var t0 = typing();
       setTimeout(function () {
-        t0.remove(); add('bot', talk); setSugg(true);
+        t0.remove(); add('bot', talk);
         send.disabled = false; input.focus();
       }, 450);
       return;
