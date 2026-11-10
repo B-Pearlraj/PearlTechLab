@@ -118,42 +118,8 @@
 .ai-form button:disabled{ opacity:.4; cursor:not-allowed; }
 .ai-foot{ text-align:center; font-size:.68rem; color:var(--ai-muted); padding:0 0 10px; background:var(--ai-surface); }
 
-/* Short laptop screens */
-@media (max-height:700px) and (min-width:601px){
-  #ai-panel{ height:calc(100vh - 110px); bottom:88px; }
-}
-
-/* ---------- Phones: full-screen chat sheet ---------- */
-html.ai-lock, html.ai-lock body{ overflow:hidden; }
-
-@media (max-width:600px){
-  #ai-launcher{
-    right:16px; bottom:calc(16px + env(safe-area-inset-bottom,0px));
-    width:56px; height:56px;
-  }
-  /* hide the launcher while chat is open so it never covers the input */
-  #ai-launcher[aria-expanded="true"]{ display:none; }
-
-  #ai-panel{
-    inset:0; width:100%; max-width:none;
-    height:var(--ai-vh, 100dvh); max-height:none;   /* --ai-vh follows the on-screen keyboard (set in JS) */
-    border:0; border-radius:0; box-shadow:none;
-    transform:translateY(24px); transition:opacity .2s, transform .25s;
-  }
-  #ai-panel.open{ transform:none; }
-
-  .ai-head{ padding:12px 14px; padding-top:calc(12px + env(safe-area-inset-top,0px)); }
-  .ai-head .ai-close{ width:44px; height:44px; font-size:1.6rem; }   /* easy thumb target */
-
-  .ai-msgs{ padding:14px; gap:12px; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
-  .ai-msg{ max-width:90%; font-size:1rem; padding:11px 14px; }
-
-  .ai-chips{ padding:0 14px 10px; gap:8px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
-  .ai-chips::-webkit-scrollbar{ display:none; }
-  .ai-chips button{ flex:0 0 auto; padding:10px 14px; font-size:.88rem; white-space:nowrap; }
-
-  .ai-form{ padding:10px 12px; gap:10px; }
-  .ai-form input{ font-size:16px; padding:13px 14px; }   /* 16px stops iOS from zooming the page on focus */
-  .ai-form button{ width:50px; }
-  .ai-foot{ font-size:.7rem; padding-bottom:calc(8px + env(safe-area-inset-bottom,0px)); }
+@media (max-width:520px){
+  #ai-launcher{ right:16px; bottom:16px; width:56px; height:56px; }
+  #ai-panel{ right:12px; left:12px; width:auto; bottom:84px; height:calc(100vh - 104px); }
+  .ai-form input{ font-size:16px; }   /* stops iOS zooming the page on focus */
 }
