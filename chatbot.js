@@ -17,7 +17,7 @@
         '<button class="ai-close" aria-label="Close">&times;</button></div>' +
       '<div class="ai-msgs" id="ai-msgs" role="log" aria-live="polite"></div>' +
       '<div class="ai-chips" id="ai-chips"></div>' +
-      '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.3 10l12 2-12 2z"/></svg></button></form>' +
+      '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
       '<div class="ai-foot">Answers come from MuthuRaj\u2019s documents only</div>' +
     '</div>');
 
@@ -42,27 +42,10 @@
     d.innerHTML = '<span></span><span></span><span></span>'; msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight; return d;
   }
 
-  function isMobile() { return window.matchMedia('(max-width:600px)').matches; }
-
-  /* keep the panel exactly as tall as the visible area (shrinks when the keyboard opens) */
-  if (window.visualViewport) {
-    var setVh = function () {
-      document.documentElement.style.setProperty('--ai-vh', window.visualViewport.height + 'px');
-      if (panel.classList.contains('open')) msgs.scrollTop = msgs.scrollHeight;
-    };
-    window.visualViewport.addEventListener('resize', setVh);
-    setVh();
-  }
-
   function toggle(open) {
     panel.classList.toggle('open', open);
     $('ai-launcher').setAttribute('aria-expanded', open ? 'true' : 'false');
-    document.documentElement.classList.toggle('ai-lock', open && isMobile());
-    if (open) {
-      msgs.scrollTop = msgs.scrollHeight;
-      /* on phones don't auto-focus: it pops the keyboard and hides the chat */
-      if (!isMobile()) setTimeout(function () { input.focus(); }, 250);
-    }
+    if (open) setTimeout(function () { input.focus(); }, 250);
   }
   $('ai-launcher').onclick = function () { toggle(!panel.classList.contains('open')); };
   panel.querySelector('.ai-close').onclick = function () { toggle(false); $('ai-launcher').focus(); };
@@ -95,7 +78,7 @@
       console.error('Assistant request failed:', e);
       t.remove(); add('bot', 'Sorry, I can\u2019t reach the assistant right now. Please try again in a moment.', 'warn');
     }
-    send.disabled = false; if (!isMobile()) input.focus();
+    send.disabled = false; input.focus();
   }
   $('ai-form').onsubmit = function (e) { e.preventDefault(); ask(input.value); };
 })();
