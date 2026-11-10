@@ -17,7 +17,7 @@
         '<button class="ai-close" aria-label="Close">&times;</button></div>' +
       '<div class="ai-msgs" id="ai-msgs" role="log" aria-live="polite"></div>' +
       '<div class="ai-chips" id="ai-chips"></div>' +
-      '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send">&#10148;</button></form>' +
+      '<form class="ai-form" id="ai-form"><input id="ai-input" maxlength="500" autocomplete="off" placeholder="Ask about my work, skills, projects..."><button type="submit" id="ai-send" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.3 10l12 2-12 2z"/></svg></button></form>' +
       '<div class="ai-foot">Answers come from MuthuRaj\u2019s documents only</div>' +
     '</div>');
 
