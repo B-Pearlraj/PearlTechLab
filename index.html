@@ -439,6 +439,7 @@ footer a{color:var(--night-ink)}
 <div id="modal-root"></div>
 
 <script>
+const API_URL='https://pearltechlab-ai-backend.onrender.com';
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxahgb9gA8Ym_tBWLeYpPsnMreqa8JrnaueqyO91fiIJQhxXUPGsFgcbSqxCS5wN3xo/exec';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
@@ -484,14 +485,16 @@ document.getElementById('modal-root').innerHTML=SERVICES.map(s=>`
       <p class="sub">${esc(s.sub)}</p>
       <form id="form-${s.id}" onsubmit="submitServiceForm(event,'${s.id}')">
         <div class="field"><label for="${s.id}-n">Your name</label><input id="${s.id}-n" type="text" name="name" autocomplete="name" required></div>
-        <div class="field"><label for="${s.id}-c">Phone or email</label><input id="${s.id}-c" type="text" name="contact" required></div>
+        <div class="field"><label for="${s.id}-e">Your email</label><input id="${s.id}-e" type="email" name="email" autocomplete="email" placeholder="you@example.com" required></div>
+        <div class="field"><label for="${s.id}-c">Phone number (optional)</label><input id="${s.id}-c" type="tel" name="phone" autocomplete="tel"></div>
         <div class="field"><label for="${s.id}-s">${esc(s.selLabel)}</label>
           <select id="${s.id}-s" name="service" required><option value="">${esc(s.selPh)}</option>${s.opts.map(o=>`<option>${esc(o)}</option>`).join('')}</select></div>
         <div class="field"><label for="${s.id}-r">${esc(s.reqLabel)}</label><textarea id="${s.id}-r" name="requirements" placeholder="${esc(s.reqPh)}" required></textarea></div>
         <input type="hidden" name="service_category" value="${esc(s.title)}">
+        <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
         <button type="submit" class="btn btn-primary form-submit">Send request</button>
       </form>
-      <div class="success" id="success-${s.id}" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><p>Request sent. I'll contact you soon.</p></div>
+      <div class="success" id="success-${s.id}" role="status"><i class="fa-solid fa-circle-check" aria-hidden="true"></i><p>Request sent. A confirmation email is on its way to you. I'll contact you soon.</p></div>
     </div>
   </div>`).join('');
 
@@ -591,12 +594,14 @@ function submitServiceForm(e,id){
   const form=e.target,ok=document.getElementById('success-'+id),btn=form.querySelector('.form-submit');
   if(!form.checkValidity()){form.reportValidity();return;}
   btn.disabled=true;btn.textContent='Sending...';
-  fetch(SCRIPT_URL,{method:'POST',body:new FormData(form)})
-    .then(()=>{
+  const data=Object.fromEntries(new FormData(form));
+  fetch(API_URL+'/service-request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)})
+    .then(async r=>{
+      if(!r.ok){let m='';try{const j=await r.json();m=typeof j.detail==='string'?j.detail:'';}catch(_){}throw new Error(m||('HTTP '+r.status));}
       form.style.display='none';ok.style.display='block';form.reset();
-      setTimeout(()=>{closeModal(id);form.style.display='block';ok.style.display='none';},3000);
+      setTimeout(()=>{closeModal(id);form.style.display='block';ok.style.display='none';},4000);
     })
-    .catch(err=>{console.error('Error:',err);alert('The request could not be sent. Please try again or email me directly.');})
+    .catch(err=>{console.error('Error:',err);alert('The request could not be sent. Please try again in a minute or email me directly.');})
     .finally(()=>{btn.disabled=false;btn.textContent='Send request';});
 }
 function submitContactForm(e){
