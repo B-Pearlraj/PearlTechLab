@@ -69,7 +69,7 @@
     if (e.key === 'Escape' && panel.classList.contains('open')) { toggle(false); $('ai-launcher').focus(); }
   });
 
-  add('bot', 'Hi! \uD83D\uDC4B Ask me anything about MuthuRaj\u2019s work.');
+  add('bot', 'Hi there! \uD83D\uDC4B I\u2019m MuthuRaj\u2019s AI Assistant. \uD83E\uDD16\nFeel free to ask me anything about MuthuRaj\u2019s work, skills, experience, and projects. I\u2019m here to help!');
 
   var sugg = $('ai-sugg'), suggList = $('ai-sugg-list'), suggBtn = $('ai-sugg-toggle');
   function setSugg(open) {
