@@ -7,7 +7,7 @@ log = logging.getLogger("assistant")
 
 API_KEY     = os.getenv("BREVO_API_KEY", "")
 MAIL_FROM   = os.getenv("MAIL_FROM", "bmuthuraj2002@gmail.com")      # must be a verified sender in Brevo
-MAIL_NAME   = os.getenv("MAIL_FROM_NAME", "Pearl-TechLab")
+MAIL_NAME   = os.getenv("MAIL_FROM_NAME", "Pearl Tech Software Solutions")
 OWNER_EMAIL = os.getenv("OWNER_EMAIL", "bmuthuraj2002@gmail.com")
 SITE_URL    = os.getenv("SITE_URL", "https://pearltechlab.onrender.com").rstrip("/")
 LOGO_URL    = os.getenv("LOGO_URL", SITE_URL + "/images/Face-PTS.png")  # emails need a full public URL
@@ -49,8 +49,9 @@ def _user_html(r):
     return f"""<div style="background:#f4f4f8;padding:24px 12px;font-family:Arial,Helvetica,sans-serif">
 <div style="max-width:560px;margin:auto;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e6e6ee">
   <div style="background:#141416;padding:26px;text-align:center">
-    <img src="{_e(LOGO_URL)}" alt="Pearl-TechLab" width="84" height="84" style="border-radius:50%;background:#1c1c20;padding:6px;display:inline-block">
-    <div style="color:#ffffff;font-size:18px;font-weight:700;margin-top:10px">Pearl-TechLab</div>
+    <img src="{_e(LOGO_URL)}" alt="Pearl Tech Software Solutions" width="84" height="84" style="border-radius:50%;background:#1c1c20;padding:6px;display:inline-block">
+    <div style="color:#ffffff;font-size:18px;font-weight:700;margin-top:10px">Pearl Tech Software Solutions</div>
+    <div style="color:#a1a1aa;font-size:12px;font-weight:500;margin-top:7px;letter-spacing:0.5px;">AI &bull; Software Development &bull; Technology</div>
   </div>
   <div style="padding:28px 30px;color:#1b1b22;line-height:1.6;font-size:15px">
     <h2 style="margin:0 0 12px;font-size:20px">Thank you for your request, {_e(r['name'])}!</h2>
