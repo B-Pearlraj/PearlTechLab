@@ -17,3 +17,18 @@ CREATE TABLE IF NOT EXISTS chunks (
 
 CREATE INDEX IF NOT EXISTS chunks_embedding_idx
     ON chunks USING hnsw (embedding vector_cosine_ops);
+
+-- Service requests submitted from the website "Request this service" forms
+CREATE TABLE IF NOT EXISTS service_requests (
+    id               SERIAL PRIMARY KEY,
+    name             TEXT NOT NULL,
+    email            TEXT NOT NULL,
+    phone            TEXT,
+    service_category TEXT,
+    service          TEXT NOT NULL,
+    requirements     TEXT NOT NULL,
+    owner_mail_sent  BOOLEAN NOT NULL DEFAULT FALSE,
+    user_mail_sent   BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at       TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS service_requests_created_idx ON service_requests (created_at DESC);

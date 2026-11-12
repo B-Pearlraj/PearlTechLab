@@ -1,16 +1,17 @@
 """FastAPI backend for the website AI assistant.
 Run:  uvicorn main:app --reload --port 8000
 """
-import os, re
+import os, re, logging
 from typing import List
-from fastapi import FastAPI, UploadFile, File, Header, HTTPException
+from fastapi import FastAPI, UploadFile, File, Header, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from openai import OpenAI
-import rag
+import rag, mailer, service_requests
 
 MIN_SCORE = float(os.getenv("MIN_SCORE", "0.45"))
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
+log = logging.getLogger("assistant")
 llm = OpenAI(api_key=os.getenv("LLM_API_KEY"), base_url=os.getenv("LLM_BASE_URL"))
 MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
 
@@ -77,6 +78,45 @@ def chat(body: ChatIn):
     if "NOT_RELEVANT" in answer or not answer:           # gate 2: the LLM itself says context is insufficient
         return {"answer": OFF_TOPIC, "sources": [], "relevant": False}
     return {"answer": answer, "sources": sorted({h["filename"] for h in hits}), "relevant": True}
+
+# ---------------- service requests (website forms) ----------------
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$")
+
+class ServiceRequestIn(BaseModel):
+    name: str = Field(min_length=1, max_length=100)
+    email: str = Field(min_length=5, max_length=200)
+    phone: str = Field(default="", max_length=40)
+    service_category: str = Field(default="", max_length=120)
+    service: str = Field(min_length=1, max_length=120)
+    requirements: str = Field(min_length=1, max_length=3000)
+    website: str = ""                      # honeypot: real visitors never fill this
+
+def _send_and_mark(req_id: int, data: dict):
+    owner_ok, user_ok = mailer.send_request_emails({**data, "id": req_id})
+    try:
+        service_requests.mark_sent(req_id, owner_ok, user_ok)
+    except Exception:
+        log.exception("Could not update mail status")
+
+@app.post("/service-request")
+def service_request(body: ServiceRequestIn, bg: BackgroundTasks):
+    if body.website:                                   # bot filled the hidden field: pretend success
+        return {"ok": True}
+    data = {k: v.strip() for k, v in body.model_dump().items() if k != "website"}
+    if not EMAIL_RE.match(data["email"]):
+        raise HTTPException(422, "Please enter a valid email address")
+    try:
+        req_id = service_requests.save_request(data)   # 1) store in Neon first
+    except Exception:
+        log.exception("Saving service request failed")
+        raise HTTPException(502, "Could not save your request")
+    bg.add_task(_send_and_mark, req_id, data)          # 2) emails go out in the background
+    return {"ok": True, "id": req_id}
+
+@app.get("/requests")
+def requests_list(x_admin_token: str = Header(None)):
+    need_admin(x_admin_token)
+    return service_requests.list_requests()
 
 # ---------------- admin (document management) ----------------
 def need_admin(token):
