@@ -41,7 +41,7 @@ UI/UX and Digital Design: wireframes, prototypes, responsive interfaces and visu
 
 # Project: Zepto Smart Commerce AI Platform
 
-An end-to-end machine learning platform built with HistGradientBoosting, FastAPI, Streamlit and PostgreSQL. It achieved R2 of 0.94 to 0.95 and ROC-AUC of 0.97. Live prototype: https://zepto-smart-commerce-ai-chatbot.onrender.com
+An end-to-end machine learning platform built with HistGradientBoosting, FastAPI, Streamlit and PostgreSQL. It achieved R2 of 0.94 to 0.95 and ROC-AUC of 0.97. Live prototype: https://zepto-smart-commerce-ui.onrender.com
 
 # Project: AI Conversational Assistant
 
@@ -77,7 +77,7 @@ Brand reveal, product-launch and promotional videos, including a Foster's Cool B
 
 # Project: Path Solution Website
 
-A professional educational website designed and deployed, live at https://pathsolution.netlify.app/
+A professional educational website designed and deployed, live at https://pearltechlab.onrender.com
 
 # Project: Programming Notes
 
@@ -92,4 +92,4 @@ A medical management Android application built with Android Studio for Dhanalaks
 Email: bmuthuraj2002@gmail.com
 Phone and WhatsApp: +91 82489 78489
 Location: Tamil Nadu, India
-Social: LinkedIn (muthuraj-balamurugan), Instagram (p.e.a.r.l.r.a.j) and WhatsApp links are in the Contact section of the website. To hire MuthuRaj, use the Contact form on the website (name, phone number and requirements) or message him directly.
+Social: LinkedIn (muthuraj-balamurugan : https://www.linkedin.com/in/muthuraj-balamurugan-909ab8281), Instagram (@itzxraj_ : https://www.instagram.com/itzxraj_?cplk=MWhkdjhnZW96Zm1vcw==) and WhatsApp links are in the Contact section of the website. To hire MuthuRaj, use the Contact form on the website (name, phone number and requirements) or message him directly.
