@@ -57,9 +57,11 @@ def _user_html(r):
       <div>{_e(r['requirements'])}</div>
     </div>
     <p style="margin:0 0 4px">If you want to add anything, simply reply to this email.</p>
-    <p style="margin:18px 0 0">Best regards,<br><b>MuthuRaj B</b><br>
-    <span style="color:#666">Data Scientist &amp; Full-Stack Developer</span><br>
-    <a href="{_e(SITE_URL)}" style="color:#4f5bd5">{_e(SITE_URL.replace('https://',''))}</a></p>
+    <p style="margin:18px 0 0;line-height:1.6">Thanks and regards,<br>
+    <b style="font-size:16px">Muthuraj</b><br>
+    <span style="color:#666">𝗔𝗶 𝗘𝗻𝗴𝗶𝗻𝗲𝗲𝗿 &amp; 𝗦𝗼𝗳𝘁𝘄𝗮𝗿𝗲 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿</span></p>
+    <img src="{_e(LOGO_URL)}" alt="Pearl-TechLab" width="72" height="72" style="display:block;margin:10px 0 8px;border-radius:50%;background:#1c1c20;padding:4px;border:0">
+    <a href="{_e(SITE_URL)}" style="color:#4f5bd5;text-decoration:none">{_e(SITE_URL.replace('https://',''))}</a>
   </div>
 </div></div>"""
 
