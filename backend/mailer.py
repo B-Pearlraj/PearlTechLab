@@ -11,6 +11,9 @@ MAIL_NAME   = os.getenv("MAIL_FROM_NAME", "Pearl-TechLab")
 OWNER_EMAIL = os.getenv("OWNER_EMAIL", "bmuthuraj2002@gmail.com")
 SITE_URL    = os.getenv("SITE_URL", "https://pearltechlab.onrender.com").rstrip("/")
 LOGO_URL    = os.getenv("LOGO_URL", SITE_URL + "/images/Face-PTS.png")  # emails need a full public URL
+WA_NUMBER   = os.getenv("WHATSAPP_NUMBER", "918248978489")               # country code + number, digits only
+WA_DISPLAY  = os.getenv("WHATSAPP_DISPLAY", "+91 82489 78489")
+WA_LINK     = f"https://wa.me/{WA_NUMBER}?text=Hi%20Muthuraj%2C%20I%20sent%20a%20service%20request%20on%20your%20website."
 
 def _e(s):  # escape + keep line breaks
     return html.escape(str(s or "")).replace("\n", "<br>")
@@ -60,8 +63,10 @@ def _user_html(r):
     <p style="margin:18px 0 0;line-height:1.6">Thanks and regards,<br>
     <b style="font-size:16px">Muthuraj</b><br>
     <span style="color:#666">𝗔𝗶 𝗘𝗻𝗴𝗶𝗻𝗲𝗲𝗿 &amp; 𝗦𝗼𝗳𝘁𝘄𝗮𝗿𝗲 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿</span></p>
-    <img src="{_e(LOGO_URL)}" alt="Pearl-TechLab" width="72" height="72" style="display:block;margin:10px 0 8px;border-radius:50%;background:#1c1c20;padding:4px;border:0">
-    <a href="{_e(SITE_URL)}" style="color:#4f5bd5;text-decoration:none">{_e(SITE_URL.replace('https://',''))}</a>
+    <p style="margin:10px 0 0;line-height:1.8">
+      <a href="{_e(WA_LINK)}" style="color:#1faa59;text-decoration:none;font-weight:600">&#128222; WhatsApp: {_e(WA_DISPLAY)}</a><br>
+      <a href="{_e(SITE_URL)}" style="color:#4f5bd5;text-decoration:none">{_e(SITE_URL.replace('https://',''))}</a>
+    </p>
   </div>
 </div></div>"""
 
