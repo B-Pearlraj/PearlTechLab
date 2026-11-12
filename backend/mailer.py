@@ -11,6 +11,7 @@ MAIL_NAME   = os.getenv("MAIL_FROM_NAME", "Pearl-TechLab")
 OWNER_EMAIL = os.getenv("OWNER_EMAIL", "bmuthuraj2002@gmail.com")
 SITE_URL    = os.getenv("SITE_URL", "https://pearltechlab.onrender.com").rstrip("/")
 LOGO_URL    = os.getenv("LOGO_URL", SITE_URL + "/images/Face-PTS.png")  # emails need a full public URL
+WA_ICON_URL = os.getenv("WA_ICON_URL", SITE_URL + "/images/whatsapp-icon.png")  # upload images/whatsapp-icon.png to your site
 WA_NUMBER   = os.getenv("WHATSAPP_NUMBER", "918248978489")               # country code + number, digits only
 WA_DISPLAY  = os.getenv("WHATSAPP_DISPLAY", "+91 82489 78489")
 WA_LINK     = f"https://wa.me/{WA_NUMBER}?text=Hi%20Muthuraj%2C%20I%20sent%20a%20service%20request%20on%20your%20website."
@@ -60,13 +61,20 @@ def _user_html(r):
       <div>{_e(r['requirements'])}</div>
     </div>
     <p style="margin:0 0 4px">If you want to add anything, simply reply to this email.</p>
-    <p style="margin:18px 0 0;line-height:1.6">Thanks and regards,<br>
-    <b style="font-size:16px">Muthuraj</b><br>
-    <span style="color:#666">𝗔𝗶 𝗘𝗻𝗴𝗶𝗻𝗲𝗲𝗿 &amp; 𝗦𝗼𝗳𝘁𝘄𝗮𝗿𝗲 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿</span></p>
-    <p style="margin:10px 0 0;line-height:1.8">
-      <a href="{_e(WA_LINK)}" style="color:#1faa59;text-decoration:none;font-weight:600">&#128222; WhatsApp: {_e(WA_DISPLAY)}</a><br>
-      <a href="{_e(SITE_URL)}" style="color:#4f5bd5;text-decoration:none">{_e(SITE_URL.replace('https://',''))}</a>
-    </p>
+    <p style="margin:18px 0 12px">Thanks and regards,</p>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif">
+      <tr><td colspan="2" style="padding:0 0 2px;font-size:17px;font-weight:700;color:#1b1b22">Muthuraj</td></tr>
+      <tr><td colspan="2" style="padding:0 0 2px;font-size:14px;font-weight:700;color:#555">AI Engineer &amp; Software Developer</td></tr>
+      <tr><td colspan="2" style="padding:0 0 12px;font-size:13px;color:#777">Founder of <b style="color:#4f5bd5">Pearl Tech Software Solution</b></td></tr>
+      <tr>
+        <td width="30" style="padding:0 0 8px;vertical-align:middle"><a href="{_e(WA_LINK)}"><img src="{_e(WA_ICON_URL)}" alt="WhatsApp" width="22" height="22" style="display:block;border:0;border-radius:50%"></a></td>
+        <td style="padding:0 0 8px;vertical-align:middle;font-size:14px"><a href="{_e(WA_LINK)}" style="color:#1b1b22;text-decoration:none;font-weight:600">{_e(WA_DISPLAY)}</a> <span style="color:#1faa59;font-size:12px">(WhatsApp)</span></td>
+      </tr>
+      <tr>
+        <td width="30" style="padding:0;vertical-align:middle"><a href="{_e(SITE_URL)}"><img src="{_e(LOGO_URL)}" alt="Pearl-TechLab" width="22" height="22" style="display:block;border:0;border-radius:50%;background:#1c1c20"></a></td>
+        <td style="padding:0;vertical-align:middle;font-size:14px"><a href="{_e(SITE_URL)}" style="color:#4f5bd5;text-decoration:none">{_e(SITE_URL.replace('https://',''))}</a></td>
+      </tr>
+    </table>
   </div>
 </div></div>"""
 
